@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -13,8 +14,8 @@ import (
 
 func main() {
 	r := mux.NewRouter()
-	courses = append(courses, Courses{CourseID: "1329dfs", CourseName: "React JS", Price: 38.98, Author: &Author{Name: "Sudharshan", website: "http://github.com/sudharshan3"}})
-	courses = append(courses, Courses{CourseID: "sdaff4321", CourseName: "GO Lang", Price: 156.98, Author: &Author{Name: "Sudharshan", website: "http://github.com/sudharshan3"}})
+	courses = append(courses, Courses{CourseID: "1329dfs", CourseName: "React JS", Price: 38.98, Author: &Author{Name: "Sudharshan", Website: "http://github.com/sudharshan3"}})
+	courses = append(courses, Courses{CourseID: "sdaff4321", CourseName: "GO Lang", Price: 156.98, Author: &Author{Name: "Sudharshan", Website: "http://github.com/sudharshan3"}})
 	r.HandleFunc("/", ServeHomeurl).Methods("GET")
 	r.HandleFunc("/courses", getAllCourses).Methods("GET")
 	r.HandleFunc("/courses/{id}", getOneCourse).Methods("GET")
@@ -22,6 +23,7 @@ func main() {
 	r.HandleFunc("/courses/{id}", updateCourse).Methods("PUT")
 	r.HandleFunc("/courses/{id}", deleteCourse).Methods("DELETE")
 	log.Fatal(http.ListenAndServe(":4000", r))
+	defer fmt.Println("Server Started Successfully \n Goto: http://localhost:4000")
 }
 
 //Course format
@@ -35,7 +37,7 @@ type Courses struct {
 //Author format
 type Author struct {
 	Name    string `json:"fullname"`
-	website string `json:"website"`
+	Website string `json:"website"`
 }
 
 //fake DB
@@ -60,7 +62,6 @@ func getAllCourses(w http.ResponseWriter, r *http.Request) {
 //GET one Course
 func getOneCourse(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(courses)
 	params := mux.Vars(r)
 
 	for _, course := range courses {
@@ -88,7 +89,7 @@ func addOneCourse(w http.ResponseWriter, r *http.Request) {
 	}
 	//generating random string for course ID
 	rand.Seed(time.Now().UnixNano())
-	course.CourseID = strconv.Itoa(rand.Intn(100))
+	course.CourseID = strconv.Itoa(rand.Intn(1000))
 	courses = append(courses, course)
 	json.NewEncoder(w).Encode("Course Added Successfully")
 	json.NewEncoder(w).Encode(course)
@@ -127,5 +128,4 @@ func deleteCourse(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-	json.NewEncoder(w).Encode("Course ID not found!")
 }
