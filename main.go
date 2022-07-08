@@ -71,15 +71,37 @@ func addOneCourse(w http.ResponseWriter, r *http.Request) {
 	}
 	var course Courses
 	_ = json.NewDecoder(r.Body).Decode(&course)
+	//checking course name is present
 	if course.IsEmpty() {
 		json.NewEncoder(w).Encode("Please Enter some Data!")
 		return
 	}
+	//generating random string for course ID
 	rand.Seed(time.Now().UnixNano())
 	course.CourseID = strconv.Itoa(rand.Intn(100))
 	courses = append(courses, course)
+	json.NewEncoder(w).Encode("Course Added Successfully")
 	json.NewEncoder(w).Encode(course)
 
 	return
 
+}
+
+//UPDATE Course
+func updateCourse(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	for index, course := range courses {
+		if course.CourseID == params["id"] {
+			courses = append(courses[:index], courses[index+1:]...)
+			var course Courses
+			_ = json.NewDecoder(r.Body).Decode(&course)
+			course.CourseID = params["id"]
+			courses = append(courses, course)
+			json.NewEncoder(w).Encode("Course Updated Successfully")
+			json.NewEncoder(w).Encode(course)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode("Course ID not found!")
 }
