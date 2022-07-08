@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -11,7 +12,16 @@ import (
 )
 
 func main() {
-
+	r := mux.NewRouter()
+	courses = append(courses, Courses{CourseID: "1329dfs", CourseName: "React JS", Price: 38.98, Author: &Author{Name: "Sudharshan", website: "http://github.com/sudharshan3"}})
+	courses = append(courses, Courses{CourseID: "sdaff4321", CourseName: "GO Lang", Price: 156.98, Author: &Author{Name: "Sudharshan", website: "http://github.com/sudharshan3"}})
+	r.HandleFunc("/", ServeHomeurl).Methods("GET")
+	r.HandleFunc("/courses", getAllCourses).Methods("GET")
+	r.HandleFunc("/courses/{id}", getOneCourse).Methods("GET")
+	r.HandleFunc("/courses", addOneCourse).Methods("POST")
+	r.HandleFunc("/courses/{id}", updateCourse).Methods("PUT")
+	r.HandleFunc("/courses/{id}", deleteCourse).Methods("DELETE")
+	log.Fatal(http.ListenAndServe(":4000", r))
 }
 
 //Course format
@@ -101,6 +111,20 @@ func updateCourse(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode("Course Updated Successfully")
 			json.NewEncoder(w).Encode(course)
 			return
+		}
+	}
+	json.NewEncoder(w).Encode("Course ID not found!")
+}
+
+//DELETE Course
+func deleteCourse(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	for index, course := range courses {
+		if course.CourseID == params["id"] {
+			courses = append(courses[:index], courses[index+1:]...)
+			json.NewEncoder(w).Encode("Course Deleted Successfully")
+			break
 		}
 	}
 	json.NewEncoder(w).Encode("Course ID not found!")
