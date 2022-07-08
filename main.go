@@ -2,7 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"math/rand"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -21,8 +24,8 @@ type Courses struct {
 
 //Author format
 type Author struct {
-	Name    string
-	website string
+	Name    string `json:"fullname"`
+	website string `json:"website"`
 }
 
 //fake DB
@@ -30,7 +33,7 @@ var courses []Courses
 
 //Check course id and name are present
 func (c *Courses) IsEmpty() bool {
-	return c.CourseID == "" && c.CourseName == ""
+	return c.CourseName == ""
 }
 
 //HomeURL
@@ -58,4 +61,25 @@ func getOneCourse(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(`No Course Found with requested ID`)
 	return
+}
+
+//ADD new Course
+func addOneCourse(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	if r.Body == nil {
+		json.NewEncoder(w).Encode("Please Enter some Data!")
+	}
+	var course Courses
+	_ = json.NewDecoder(r.Body).Decode(&course)
+	if course.IsEmpty() {
+		json.NewEncoder(w).Encode("Please Enter some Data!")
+		return
+	}
+	rand.Seed(time.Now().UnixNano())
+	course.CourseID = strconv.Itoa(rand.Intn(100))
+	courses = append(courses, course)
+	json.NewEncoder(w).Encode(course)
+
+	return
+
 }
