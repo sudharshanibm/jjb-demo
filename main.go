@@ -22,7 +22,7 @@ func main() {
 	r.HandleFunc("/courses", addOneCourse).Methods("POST")
 	r.HandleFunc("/courses/{id}", updateCourse).Methods("PUT")
 	r.HandleFunc("/courses/{id}", deleteCourse).Methods("DELETE")
-	log.Fatal(http.ListenAndServe(":4000", r))
+	log.Fatal(http.ListenAndServe(":4001", r))
 	defer fmt.Println("Server Started Successfully \n Goto: http://localhost:4000")
 }
 
