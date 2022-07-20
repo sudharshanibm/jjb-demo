@@ -1,6 +1,14 @@
-FROM go-lang:1.18-alpine3.9
-RUN mkdir /app
-ADD . /app
-WORKDIR /app
-RUN go build -o main .
-CMD ["/app/main"]
+FROM golang:latest
+
+RUN mkdir /build
+WORKDIR /build
+
+RUN export GO111MODULE=on
+RUN go get github.com/sudharshan3/GO-lms
+RUN cd /build && git clone https://github.com/sudharshan3/GO-lms.git
+
+RUN cd /build/GO-lms && go build
+
+EXPOSE 4000
+
+ENTRYPOINT [ "/build/GO-lms/main" ]
