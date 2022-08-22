@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: newgoapp
+spec:
+  selector:
+    matchLabels:
+      app: newgoapp
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: newgoapp
+    spec:
+      containers:
+      - name: newgoapp
+        image: newgoapp:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 4001
