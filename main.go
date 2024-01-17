@@ -13,6 +13,11 @@ import (
 )
 
 func main() {
+	port := "4001" // Default port if not provided
+	if len(os.Args) > 1 {
+		port = os.Args[1]
+	}
+
 	r := mux.NewRouter()
 	courses = append(courses, Courses{CourseID: "1329dfs", CourseName: "React JS", Price: 38.98, Author: &Author{Name: "Sudharshan", Website: "http://github.com/sudharshan3"}})
 	courses = append(courses, Courses{CourseID: "sdaff4321", CourseName: "GO Lang", Price: 156.98, Author: &Author{Name: "Sudharshan", Website: "http://github.com/sudharshan3"}})
@@ -22,10 +27,9 @@ func main() {
 	r.HandleFunc("/courses", addOneCourse).Methods("POST")
 	r.HandleFunc("/courses/{id}", updateCourse).Methods("PUT")
 	r.HandleFunc("/courses/{id}", deleteCourse).Methods("DELETE")
-	log.Fatal(http.ListenAndServe(":4001", r))
-	defer fmt.Println("Server Started Successfully \n Goto: http://localhost:4000")
+	log.Fatal(http.ListenAndServe(":"+port, r))
+	defer fmt.Println("Server Started Successfully \n Goto: http://localhost:" + port)
 }
-
 //Course format
 type Courses struct {
 	CourseID   string  `json:"courseid"`

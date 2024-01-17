@@ -30,7 +30,8 @@ pipeline {
                     // Navigate to the project directory
                     dir("${env.WORKSPACE}") {
                         // Build the Go executable
-                        bat "${GOROOT}\\bin\\go build -o myapp.exe main.go"
+                        def port = 5000 // Set the desired port here
+                        bat "${GOROOT}\\bin\\go build -o myapp.exe main.go ${port}"
 
                         // Run the executable
                         bat "start myapp.exe"
