@@ -201,3 +201,34 @@ func TestDeleteCourse(t *testing.T) {
 
 // Add similar test functions for other API endpoints
 // Remember to handle edge cases and error scenarios
+func resetCourses() {
+	courses = []Courses{
+		{CourseID: "1329dfs", CourseName: "React JS", Price: 38.98, Author: &Author{Name: "Sudharshan", Website: "http://github.com/sudharshan3"}},
+		{CourseID: "sdaff4321", CourseName: "GO Lang", Price: 156.98, Author: &Author{Name: "Sudharshan", Website: "http://github.com/sudharshan3"}},
+	}
+}
+
+func coursesEqual(c1, c2 Courses) bool {
+	return c1.CourseID == c2.CourseID &&
+		c1.CourseName == c2.CourseName &&
+		c1.Price == c2.Price &&
+		authorEqual(c1.Author, c2.Author)
+}
+
+func updateCourse(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	for index, course := range courses {
+		if course.CourseID == params["id"] {
+			courses = append(courses[:index], courses[index+1:]...)
+			var course Courses
+			_ = json.NewDecoder(r.Body).Decode(&course)
+			course.CourseID = params["id"]
+			courses = append(courses, course)
+			json.NewEncoder(w).Encode("Course Updated Successfully")
+			json.NewEncoder(w).Encode(course)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode("Course ID not found!")
+}
