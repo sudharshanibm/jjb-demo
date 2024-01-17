@@ -55,3 +55,30 @@ func TestGetOneCourse(t *testing.T) {
 
 	// Now you can perform assertions on the 'course' object
 }
+
+func resetCourses() {
+	courses = []Courses{
+		{CourseID: "1329dfs", CourseName: "React JS", Price: 38.98, Author: &Author{Name: "Sudharshan", Website: "http://github.com/sudharshan3"}},
+		{CourseID: "sdaff4321", CourseName: "GO Lang", Price: 156.98, Author: &Author{Name: "Sudharshan", Website: "http://github.com/sudharshan3"}},
+	}
+}
+
+
+
+// Additional test functions for other API endpoints can be added similarly
+
+func coursesEqual(c1, c2 Courses) bool {
+	return c1.CourseID == c2.CourseID &&
+		c1.CourseName == c2.CourseName &&
+		c1.Price == c2.Price &&
+		authorEqual(c1.Author, c2.Author)
+}
+
+func authorEqual(a1, a2 *Author) bool {
+	if a1 == nil || a2 == nil {
+		return a1 == a2
+	}
+	return a1.Name == a2.Name && a1.Website == a2.Website
+}
+
+// Add similar functions for testing other endpoints like addOneCourse, updateCourse, deleteCourse, etc.
