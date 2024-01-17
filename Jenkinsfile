@@ -35,11 +35,11 @@ pipeline {
                     dir("${env.WORKSPACE}") {
                         // Build the Go executable
                         def port = params.PORT
-                        bat "${GOROOT}\\bin\\go run main.go ${port}"
+                        // bat "${GOROOT}\\bin\\go run main.go ${port}"
                         bat "${GOROOT}\\bin\\go build -o myapp.exe main.go"
 
                         // Run the executable
-                        bat "start myapp.exe"
+                        bat "start myapp.exe ${port}"
                     }
                 }
             }
