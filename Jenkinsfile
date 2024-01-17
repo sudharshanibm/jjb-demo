@@ -1,38 +1,53 @@
 pipeline {
     agent any
-    
+
+    environment {
+        GO_VERSION = '1.17'
+        GOPATH = "${env.WORKSPACE}/go"
+        GOBIN = "${GOPATH}/bin"
+        PATH = "${GOBIN};${env.PATH}"
+    }
+
     stages {
-        stage('TEST Checkout') {
+        stage('Install Go') {
             steps {
-                // Checkout the source code from your version control system (e.g., Git)
-                checkout scm
-            }
-        }
-        
-        stage('Build') {
-            steps {
-                // Assuming you have Go installed on the Jenkins agent
                 script {
-                    sh 'go mod tidy'
-                    sh 'go build -o myapp main.go'
+                    // Install Go
+                    bat "curl -O https://dl.google.com/go/go${GO_VERSION}.windows-amd64.zip"
+                    bat "Expand-Archive -Path go${GO_VERSION}.windows-amd64.zip -DestinationPath C:\\"
+                    bat "setx GOROOT C:\\go"
+                    bat "setx GOPATH ${GOPATH}"
+                    bat "setx GOBIN ${GOBIN}"
+                    bat "setx PATH \"${GOBIN};${env.PATH}\""
+
+                    // Verify Go installation
+                    bat "go version"
                 }
             }
         }
-        
-        stage('Run') {
+
+        stage('Build and Run') {
             steps {
-                // Run the generated executable
                 script {
-                    sh './myapp'
+                    // Navigate to the project directory
+                    dir("${env.WORKSPACE}") {
+                        // Build the Go executable
+                        bat "go build -o myapp.exe main.go"
+
+                        // Run the executable
+                        bat "start myapp.exe"
+                    }
                 }
             }
         }
     }
-    
+
     post {
-        always {
-            // Clean up any artifacts or perform cleanup steps if needed
-            cleanWs()
+        success {
+            echo 'Build and run successful!'
+        }
+        failure {
+            echo 'Build or run failed!'
         }
     }
 }
