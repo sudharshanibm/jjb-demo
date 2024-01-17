@@ -14,7 +14,9 @@ pipeline {
                 script {
                     // Install Go
                     bat "curl -O https://dl.google.com/go/go${GO_VERSION}.windows-amd64.zip"
-                    bat "Expand-Archive -Path go${GO_VERSION}.windows-amd64.zip -DestinationPath C:\\"
+                    bat "tar -xf go${GO_VERSION}.windows-amd64.zip -C C:\\"
+
+                    // Set Go environment variables
                     bat "setx GOROOT C:\\go"
                     bat "setx GOPATH ${GOPATH}"
                     bat "setx GOBIN ${GOBIN}"
