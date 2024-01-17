@@ -25,9 +25,12 @@ func TestGetAllCourses(t *testing.T) {
 	}
 
 	expected := `[{"courseid":"1329dfs","coursename":"React JS","price":38.98,"author":{"fullname":"Sudharshan","website":"http://github.com/sudharshan3"}},{"courseid":"sdaff4321","coursename":"GO Lang","price":156.98,"author":{"fullname":"Sudharshan","website":"http://github.com/sudharshan3"}}]`
-	if rr.Body.String() != expected {
-		t.Errorf("Handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
+	actual := rr.Body.String()
+	if actual != expected {
+		t.Errorf("Handler returned unexpected body:\n got  %v\n want %v", actual, expected)
 	}
+
+	t.Logf("Actual response body: %v", actual)
 }
 
 // Additional test functions for other API endpoints can be added similarly
