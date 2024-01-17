@@ -31,41 +31,42 @@ func TestGetAllCourses(t *testing.T) {
 }
 
 func TestGetOneCourse(t *testing.T) {
-    resetCourses()
+	resetCourses()
 
-    req, err := http.NewRequest("GET", "/courses/1329dfs", nil)
-    if err != nil {
-        t.Fatal(err)
-    }
+	req, err := http.NewRequest("GET", "/courses/1329dfs", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-    rr := httptest.NewRecorder()
-    handler := http.HandlerFunc(getOneCourse)
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(getOneCourse)
 
-    handler.ServeHTTP(rr, req)
+	handler.ServeHTTP(rr, req)
 
-    if status := rr.Code; status != http.StatusOK {
-        t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
-    }
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
 
-    var course Courses
-    err = json.Unmarshal(rr.Body.Bytes(), &course)
-    if err != nil {
-        t.Errorf("Error unmarshalling JSON: %v", err)
-    }
+	var courses []Courses
+	err = json.Unmarshal(rr.Body.Bytes(), &courses)
+	if err != nil {
+		t.Errorf("Error unmarshalling JSON: %v", err)
+	}
 
-    expectedCourse := Courses{
-        CourseID:   "1329dfs",
-        CourseName: "React JS",
-        Price:      38.98,
-        Author: &Author{
-            Name:    "Sudharshan",
-            Website: "http://github.com/sudharshan3",
-        },
-    }
+	// Assuming you want to check the first course in the array
+	expectedCourse := Courses{
+		CourseID:   "1329dfs",
+		CourseName: "React JS",
+		Price:      38.98,
+		Author: &Author{
+			Name:    "Sudharshan",
+			Website: "http://github.com/sudharshan3",
+		},
+	}
 
-    if !coursesEqual(expectedCourse, course) {
-        t.Errorf("Handler returned unexpected body:\n got  %v\n want %v", course, expectedCourse)
-    }
+	if len(courses) == 0 || !coursesEqual(expectedCourse, courses[0]) {
+		t.Errorf("Handler returned unexpected body:\n got  %v\n want %v", courses, expectedCourse)
+	}
 }
 
 func resetCourses() {
