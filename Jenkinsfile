@@ -23,6 +23,7 @@ pipeline {
             }
         }
 
+
         stage('Build and Run') {
             steps {
                 script {
@@ -37,14 +38,21 @@ pipeline {
                 }
             }
         }
+            stage('Run Tests') {
+            steps {
+                script {
+                    sh "go test -v ./..."
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo 'Build and run successful!'
+            echo 'Build and tests successful!'
         }
         failure {
-            echo 'Build or run failed!'
+            echo 'Build or tests failed!'
         }
     }
 }
