@@ -69,6 +69,7 @@ func TestGetOneCourse(t *testing.T) {
 	}
 }
 
+
 func resetCourses() {
 	courses = []Courses{
 		{CourseID: "1329dfs", CourseName: "React JS", Price: 38.98, Author: &Author{Name: "Sudharshan", Website: "http://github.com/sudharshan3"}},
