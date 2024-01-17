@@ -2,12 +2,12 @@ pipeline {
     agent any
     
     stages {
-        stage('TEST Checkout') {
-            steps {
-                // Checkout the source code from your version control system (e.g., Git)
-                checkout scm
-            }
-        }
+        // stage('TEST Checkout') {
+        //     steps {
+        //         // Checkout the source code from your version control system (e.g., Git)
+        //         checkout scm
+        //     }
+        // }
         
         stage('Build') {
             steps {
