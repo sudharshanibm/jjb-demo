@@ -13,6 +13,7 @@ pipeline {
             steps {
                 // Assuming you have Go installed on the Jenkins agent
                 script {
+                    sh 'go mod tidy'
                     sh 'go build -o myapp main.go'
                 }
             }
