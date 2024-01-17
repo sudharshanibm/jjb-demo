@@ -47,14 +47,28 @@ func TestGetOneCourse(t *testing.T) {
 		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	var course Courses
-	err = json.Unmarshal(rr.Body.Bytes(), &course)
+	var courses []Courses
+	err = json.Unmarshal(rr.Body.Bytes(), &courses)
 	if err != nil {
 		t.Errorf("Error unmarshalling JSON: %v", err)
 	}
 
-	// Now you can perform assertions on the 'course' object
+	// Assuming you want to check the first course in the array
+	expectedCourse := Courses{
+		CourseID:   "1329dfs",
+		CourseName: "React JS",
+		Price:      38.98,
+		Author: &Author{
+			Name:    "Sudharshan",
+			Website: "http://github.com/sudharshan3",
+		},
+	}
+
+	if len(courses) == 0 || !coursesEqual(expectedCourse, courses[0]) {
+		t.Errorf("Handler returned unexpected body:\n got  %v\n want %v", courses, expectedCourse)
+	}
 }
+
 
 func resetCourses() {
 	courses = []Courses{
