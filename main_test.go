@@ -47,27 +47,20 @@ func TestGetOneCourse(t *testing.T) {
 		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	var courses []Courses
-	err = json.Unmarshal(rr.Body.Bytes(), &courses)
+	// Unmarshal the response into a string
+	var responseBody string
+	err = json.Unmarshal(rr.Body.Bytes(), &responseBody)
 	if err != nil {
 		t.Errorf("Error unmarshalling JSON: %v", err)
 	}
 
-	// Assuming you want to check the first course in the array
-	expectedCourse := Courses{
-		CourseID:   "1329dfs",
-		CourseName: "React JS",
-		Price:      38.98,
-		Author: &Author{
-			Name:    "Sudharshan",
-			Website: "http://github.com/sudharshan3",
-		},
-	}
-
-	if len(courses) == 0 || !coursesEqual(expectedCourse, courses[0]) {
-		t.Errorf("Handler returned unexpected body:\n got  %v\n want %v", courses, expectedCourse)
+	// Compare the string response with the expected string
+	expectedResponse := `[{"courseid":"1329dfs","coursename":"React JS","price":38.98,"author":{"fullname":"Sudharshan","website":"http://github.com/sudharshan3"}},{"courseid":"sdaff4321","coursename":"GO Lang","price":156.98,"author":{"fullname":"Sudharshan","website":"http://github.com/sudharshan3"}}]`
+	if responseBody != expectedResponse {
+		t.Errorf("Handler returned unexpected body:\n got  %v\n want %v", responseBody, expectedResponse)
 	}
 }
+
 
 
 func resetCourses() {
