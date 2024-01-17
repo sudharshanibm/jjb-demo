@@ -9,6 +9,10 @@ pipeline {
         PATH = "C:\\go\\bin;${GOPATH}/bin;${env.PATH}"
     }
 
+   parameters {
+        string(name: 'PORT', defaultValue: '4001', description: 'Port number for the Go program')
+    }
+
     stages {
         stage('Install Go') {
             steps {
@@ -30,7 +34,7 @@ pipeline {
                     // Navigate to the project directory
                     dir("${env.WORKSPACE}") {
                         // Build the Go executable
-                        def port = 5000 // Set the desired port here
+                        def port = params.PORT
                         bat "${GOROOT}\\bin\\go build -o myapp.exe main.go ${port}"
 
                         // Run the executable
