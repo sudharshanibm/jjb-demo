@@ -41,7 +41,7 @@ pipeline {
             stage('Run Tests') {
             steps {
                 script {
-                    sh "go test -v ./..."
+                   bat "${GOROOT}\\bin\\go test -v ./..."
                 }
             }
         }
