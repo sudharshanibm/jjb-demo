@@ -1,37 +1,38 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the source code from your version control system (e.g., Git)
-                checkout scm
-            }
-        }
-        
-        stage('Build') {
-            steps {
-                // Assuming you have Go installed on the Jenkins agent
                 script {
-                    sh 'go build -o myapp main.go'
+                    // Clone the repository
+                    git 'https://github.com/sudharshan3/GO-lms.git'
                 }
             }
         }
-        
+
+        stage('Build') {
+            steps {
+                script {
+                    // Build the main.go file
+                    sh 'go build main.go'
+                }
+            }
+        }
+
         stage('Run') {
             steps {
-                // Run the generated executable
                 script {
-                    sh './myapp'
+                    // Run the executable
+                    sh './main'
                 }
             }
         }
     }
-    
+
     post {
-        always {
-            // Clean up any artifacts or perform cleanup steps if needed
-            cleanWs()
+        success {
+            echo 'Build and Run successful!'
         }
     }
 }
