@@ -215,20 +215,9 @@ func coursesEqual(c1, c2 Courses) bool {
 		authorEqual(c1.Author, c2.Author)
 }
 
-func updateCourse(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r)
-	for index, course := range courses {
-		if course.CourseID == params["id"] {
-			courses = append(courses[:index], courses[index+1:]...)
-			var course Courses
-			_ = json.NewDecoder(r.Body).Decode(&course)
-			course.CourseID = params["id"]
-			courses = append(courses, course)
-			json.NewEncoder(w).Encode("Course Updated Successfully")
-			json.NewEncoder(w).Encode(course)
-			return
-		}
-	}
-	json.NewEncoder(w).Encode("Course ID not found!")
+func authorEqual(a1, a2 *Author) bool {
+    if a1 == nil || a2 == nil {
+        return a1 == a2
+    }
+    return a1.Name == a2.Name && a1.Website == a2.Website
 }
