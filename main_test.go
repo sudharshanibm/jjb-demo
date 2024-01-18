@@ -139,45 +139,46 @@ func TestAddOneCourse(t *testing.T) {
 }
 
 func TestUpdateCourse(t *testing.T) {
-	resetCourses()
+    resetCourses()
 
-	updateCourse := Courses{
-		CourseName: "Updated Course",
-		Price:      55.55,
-		Author: &Author{
-			Name:    "Updated Author",
-			Website: "http://updated.com",
-		},
-	}
+    updateCoursePayload := Courses{
+        CourseName: "Updated Course",
+        Price:      55.55,
+        Author: &Author{
+            Name:    "Updated Author",
+            Website: "http://updated.com",
+        },
+    }
 
-	jsonBody, _ := json.Marshal(updateCourse)
+    jsonBody, _ := json.Marshal(updateCoursePayload)
 
-	req, err := http.NewRequest("PUT", "/courses/1329dfs", bytes.NewBuffer(jsonBody))
-	if err != nil {
-		t.Fatal(err)
-	}
+    req, err := http.NewRequest("PUT", "/courses/1329dfs", bytes.NewBuffer(jsonBody))
+    if err != nil {
+        t.Fatal(err)
+    }
 
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(updateCourse)
+    rr := httptest.NewRecorder()
+    handler := http.HandlerFunc(updateCourseHandler)
 
-	handler.ServeHTTP(rr, req)
+    handler.ServeHTTP(rr, req)
 
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
-	}
+    if status := rr.Code; status != http.StatusOK {
+        t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
+    }
 
-	var responseCourses []Courses
-	err = json.Unmarshal(rr.Body.Bytes(), &responseCourses)
-	if err != nil {
-		t.Errorf("Error unmarshalling JSON: %v", err)
-	}
+    var responseCourses []Courses
+    err = json.Unmarshal(rr.Body.Bytes(), &responseCourses)
+    if err != nil {
+        t.Errorf("Error unmarshalling JSON: %v", err)
+    }
 
-	if len(responseCourses) != 1 {
-		t.Errorf("Expected 1 course, got %v", len(responseCourses))
-	}
+    if len(responseCourses) != 1 {
+        t.Errorf("Expected 1 course, got %v", len(responseCourses))
+    }
 
-	// You can add more specific assertions based on your API response
+    // You can add more specific assertions based on your API response
 }
+
 
 func TestDeleteCourse(t *testing.T) {
 	resetCourses()
