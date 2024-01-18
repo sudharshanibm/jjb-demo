@@ -26,7 +26,7 @@ func main() {
 	r.HandleFunc("/courses", getAllCourses).Methods("GET")
 	r.HandleFunc("/courses/{id}", getOneCourse).Methods("GET")
 	r.HandleFunc("/courses", addOneCourse).Methods("POST")
-	r.HandleFunc("/courses/{id}", updateCourse).Methods("PUT")
+	r.HandleFunc("/courses/{id}", updateCourseHandler).Methods("PUT")
 	r.HandleFunc("/courses/{id}", deleteCourse).Methods("DELETE")
 	log.Fatal(http.ListenAndServe(":"+port, r))
 	defer fmt.Println("Server Started Successfully \n Goto: http://localhost:" + port)
@@ -104,7 +104,7 @@ func addOneCourse(w http.ResponseWriter, r *http.Request) {
 }
 
 //UPDATE Course
-func updateCourse(w http.ResponseWriter, r *http.Request) {
+func updateCourseHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for index, course := range courses {
