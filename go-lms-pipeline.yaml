@@ -1,0 +1,46 @@
+- job:
+    name: go-lms-pipeline
+    project-type: pipeline
+    description: 'Go LMS Pipeline'
+    properties:
+      - build-discarder:
+          days-to-keep: 30
+          num-to-keep: 10
+    parameters:
+      - string:
+          name: PORT
+          default: '4001'
+          description: 'Port number for the Go program'
+    pipeline:
+      agent: any
+      environment:
+        GO_VERSION: '1.18'
+        GOPATH: "${WORKSPACE}/go"
+        GOBIN: "${GOPATH}/bin"
+        GOROOT: "C:\\go"
+        PATH: "C:\\go\\bin;${GOPATH}/bin;${PATH}"
+      stages:
+        - stage:
+            name: 'Install Go'
+            steps:
+              - script:
+                  - 'curl -O https://dl.google.com/go/go${GO_VERSION}.windows-amd64.zip'
+                  - 'tar -xf go${GO_VERSION}.windows-amd64.zip -C C:\\'
+                  - "${GOROOT}\\bin\\go version"
+        - stage:
+            name: 'Build and Run'
+            steps:
+              - script:
+                  - 'cd ${WORKSPACE}'
+                  - "${GOROOT}\\bin\\go build -o myapp.exe main.go"
+                  - 'start myapp.exe ${PORT}'
+        - stage:
+            name: 'Run Tests'
+            steps:
+              - script:
+                  - "${GOROOT}\\bin\\go test -v ./..."
+      post:
+        success:
+          - echo 'Build and tests successful!'
+        failure:
+          - echo 'Build or tests failed!'
