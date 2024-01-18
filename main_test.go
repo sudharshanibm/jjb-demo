@@ -156,3 +156,10 @@ func TestDeleteCourse(t *testing.T) {
 
 	// Add more specific assertions based on your API response
 }
+
+func resetCourses() {
+	courses = []Courses{
+		{CourseID: "1329dfs", CourseName: "React JS", Price: 38.98, Author: &Author{Name: "Sudharshan", Website: "http://github.com/sudharshan3"}},
+		{CourseID: "sdaff4321", CourseName: "GO Lang", Price: 156.98, Author: &Author{Name: "Sudharshan", Website: "http://github.com/sudharshan3"}},
+	}
+}
