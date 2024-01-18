@@ -50,30 +50,31 @@ func TestGetAllCourses(t *testing.T) {
 }
 
 func TestGetOneCourse(t *testing.T) {
-	resetCourses()
+    resetCourses()
 
-	req, err := http.NewRequest("GET", "/courses/1329dfs", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+    req, err := http.NewRequest("GET", "/courses/1329dfs", nil)
+    if err != nil {
+        t.Fatal(err)
+    }
 
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(getOneCourse)
+    rr := httptest.NewRecorder()
+    handler := http.HandlerFunc(getOneCourse)
 
-	handler.ServeHTTP(rr, req)
+    handler.ServeHTTP(rr, req)
 
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
-	}
+    if status := rr.Code; status != http.StatusOK {
+        t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
+    }
 
-	var course Courses
-	err = json.Unmarshal(rr.Body.Bytes(), &course)
-	if err != nil {
-		t.Errorf("Error unmarshalling JSON: %v", err)
-	}
+    var course Courses
+    err = json.Unmarshal(rr.Body.Bytes(), &course)
+    if err != nil {
+        t.Errorf("Error unmarshalling JSON: %v", err)
+    }
 
-	// Add more specific assertions based on your API response
+    // Now you can perform assertions on the 'course' object
 }
+
 
 func TestAddOneCourse(t *testing.T) {
 	resetCourses()
