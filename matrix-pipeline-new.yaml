@@ -43,5 +43,18 @@
          type: groovy
          name: foo
          command: return [one,two,three]
+         
+    properties:
+      - matrix-combinations-parameter:
+          name: COMBINATION
+          description: 'Matrix Combinations'
+          filter: |
+            (os=="fedora11" && arch=="amd64") || (database=="postgresql" && config=="config_list")
+          sort-mode: 
+            - BUILD_SUCCESSFUL
+            - BUILD_FAILED
+            - BUILD_NONE
+            - BUILD_ALL
+
     builders:
       - batch: 'dir'
